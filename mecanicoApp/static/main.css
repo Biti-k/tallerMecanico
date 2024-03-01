@@ -1,0 +1,47 @@
+* {
+  font-family: "Ubuntu", sans-serif;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  height: 100%;
+  width: 100%;
+}
+.pattern {
+  background-color: #347474;
+  opacity: 0.4;
+  background-image: radial-gradient(#42b883 1.25px, #347474 1.25px);
+  background-size: 25px 25px;
+}
+.inputContainer {
+  display: flex;
+}
+.inputContainer label {
+  font-size: 30px;
+  color: #42b883;
+}
+.inputContainer input {
+  box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  height: 40px;
+  padding-left: 10px;
+  background-color: #347474;
+  color: #42b883;
+}
+.inputContainer input:focus {
+  outline: 2px solid #42b883;
+}
+.submit {
+  transition: 400ms;
+}
+.submit:hover {
+  cursor: pointer;
+  transform: scaleX(1.09);
+  background-color: #347474;
+  color: #ff7e67;
+  box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}

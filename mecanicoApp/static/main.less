@@ -1,0 +1,57 @@
+@green1 : #42b883;
+@greenDark : #347474;
+@greenDarkest : #35495e;
+@clay : #ff7e67;
+*{
+    font-family: "Ubuntu", sans-serif;
+}
+
+html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    height: 100%;
+    width: 100%;
+}
+.pattern{
+    background-color: #347474;
+    opacity: 0.4;
+    background-image: radial-gradient(#42b883 1.25px, #347474 1.25px);
+    background-size: 25px 25px;
+}
+
+.inputContainer{
+    display: flex;
+    label{
+        font-size: 30px;
+        color: @green1;
+    }
+    input{
+        box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        height: 40px;
+        padding-left: 10px;
+        background-color: @greenDark;
+        color: @green1;
+        &:focus{
+            outline:2px solid @green1;
+        }
+    }
+}
+
+.submit{
+    transition: 400ms;
+
+    &:hover{
+        cursor: pointer;
+        transform: scaleX(1.09);
+        background-color: @greenDark;
+        color: @clay;
+        box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+}
+

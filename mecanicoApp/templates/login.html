@@ -1,0 +1,36 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Login{% endblock %}
+{% block content %}
+<div class="relative flex items-center justify-center w-full h-full bg-greenDark">
+    <div class="absolute z-0 w-full h-full videoBackground">
+        <video autoplay loop muted class="relative object-cover object-center w-full h-full">
+            <source src="{% static 'videos/back.webm'%}" type="video/mp4">
+        </video>
+        <div class="absolute top-0 w-full h-full pattern">
+
+        </div>
+    </div>
+    <div class="z-20 flex w-3/4 rounded shadow-2xl bg-greenDarkest h-3/4 loginPage shadow-slate-800/80">
+        <div class="relative w-2/5 h-full rounded image-car">
+            <img src="{% static 'imgs/drifting.jpg'%}" class="object-cover object-center w-full h-full rounded-l">
+            <div class="absolute top-0 w-full h-full rounded-l overlay bg-greenDark opacity-40"></div>
+        </div>
+        <div class="z-10 w-3/5 p-8 form">
+            <h1 class="pt-5 text-6xl text-center text-green1">Login</h1>
+            <form action="" method="post" class="flex flex-col items-center">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="flex items-center justify-center w-full inputContainer">
+                        <div class="flex flex-col w-3/5 mx-auto mt-12">
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}
+                <input type="submit" value="Iniciar sesión" class="h-16 mt-20 text-xl rounded-full shadow-xl w-60 bg-clay submit text-greenDarkest shadow-clay/40">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
