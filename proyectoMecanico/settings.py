@@ -81,7 +81,10 @@ DATABASES = {
         'USER': 'biti',
         'PASSWORD': "biti",
         "HOST" : "localhost",
-        "PORT" : 3306
+        "PORT" : 3306,
+    },
+    'options':{
+      'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",  
     }
 }
 
