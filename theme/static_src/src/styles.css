@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .buttonTransparent{
+        @apply flex justify-center p-2 mt-2 text-base font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDarkest;
+    }
+}

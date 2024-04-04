@@ -1,0 +1,98 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Mecanico{% endblock %}
+{% block content %}
+<div class="flex w-full min-h-full bg-greenDarkest">
+    <div class="w-full p-8 contenido">
+        <h1 class="mb-4 text-4xl text-center text-green1">Mecánico</h1>
+        <div class="w-full h-1 bg-greenDark"></div>
+        <h2 class="mt-8 text-3xl text-center text-green1">Reparaciones</h2>
+        <form>
+            <div class="flex flex-wrap justify-center gap-2 mt-8 reparaciones">
+                    <div class="p-4 rounded-xl reparacion bg-transparent border-green1  transition border w-[100%] h-auto flex flex-col justify-center">
+                        <p class="text-center text-green1 whitespace-nowrap">Cliente<br>{{reparacion.cliente}}</p>
+                        <div class="w-full h-[1px] bg-greenDark"></div>
+                        <p class="text-center text-green1">Coche<br>{{reparacion.coche}}</p>
+                        <div class="w-full h-[1px] bg-greenDark"></div>
+                        <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
+                        <div class="w-full h-[1px] bg-greenDark mb-2"></div>
+                        <div class="flex justify-center">
+                            <div>
+                                <a href="#" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Cerrar reparacion <i class="fa-regular fa-circle-xmark"></i></a>
+                                <a href="#" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Agregar linea <i class="fa-solid fa-square-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex mt-8 crearLinea">
+                    <div class="w-[33.3%] flex">
+                        <div class="relative flex flex-col gap-1 p-2 rounded-lg bg-greenDark">
+                            <p class="font-bold text-green1">Tipo de linea</p>
+                            <div class="flex w-full gap-2 opciones">
+                                    <div class="flex items-center justify-center p-3 bg-transparent border rounded-full cursor-pointer opcion mecanico border-green1 group">
+                                        <img src="{% static 'imgs/mechanic.svg'%}" class="object-cover w-10 h-10">
+                                        <div class="absolute flex items-center justify-center w-auto h-full p-3 transition duration-300 border rounded-md opacity-0 bg-greenDark top-full border-green1 child group-hover:opacity-95">
+                                            <p class="text-center text-green1">Trabajos que hace el mecanico</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-center p-3 bg-transparent border rounded-full cursor-pointer opcion pack border-green1 group">
+                                        <img src="{% static 'imgs/pack.svg' %}" class="object-cover w-10 h-10">
+                                        <div class="absolute flex items-center justify-center w-auto h-full p-3 transition duration-300 border rounded-md opacity-0 bg-greenDark top-full border-green1 child group-hover:opacity-95">
+                                            <p class="text-center text-green1">Pack</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-center p-3 bg-transparent border rounded-full cursor-pointer opcion pieza border-green1 group">
+                                        <img src="{% static 'imgs/wrench.svg' %}" class="object-cover w-10 h-10">
+                                        <div class="absolute flex items-center justify-center w-auto h-full p-3 transition duration-300 border rounded-md opacity-0 bg-greenDark top-full border-green1 child group-hover:opacity-95">
+                                            <p class="text-center text-green1">Piezas de recambio</p>
+                                        </div>  
+                                    </div>
+                                    <div class="flex items-center justify-center p-3 bg-transparent border rounded-full cursor-pointer opcion otro border-green1 group">
+                                        <img src="{% static 'imgs/other.svg' %}" class="object-cover w-10 h-10">
+                                        <div class="absolute flex items-center justify-center w-auto h-full p-3 transition duration-300 border rounded-md opacity-0 bg-greenDark top-full border-green1 child group-hover:opacity-95">
+                                            <p class="text-center text-green1">Otro</p>
+                                        </div>  
+                                    </div>
+                                    <div class="absolute left-0 flex items-center justify-center w-full h-full transition duration-300 border rounded-md opacity-0 top-full bg-green1 relleno border-green1 child group-hover:opacity-75"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center w-[33.3%] inputs">
+                        <p class="text-center text-green1">Elige un tipo de línea</p>
+                    </div>
+                </div>
+                <p class="mt-8 mb-3 text-2xl text-center text-green1">Líneas</p>
+                <div class="flex flex-col gap-5 lineas">
+                    {% for linea in lineas %}
+                    <div class="flex p-3 rounded-lg linea bg-greenDark">
+                        <div>
+                            <p class="font-bold text-green1">Descripción</p>
+                            <p class="text-green1">{{linea.tarea}}</p>
+                        </div>
+
+                    </div>
+
+
+                    {% endfor %}
+                </div>
+        </form>
+    </div>
+</div>  
+<script>
+    $(document).ready(function(){
+        $(".crearLinea").hide();
+        $(".agregarLinea").on("click", function(){
+            $(".crearLinea").show(1000);
+        });
+        $(".opcion").on("click", function(){
+            $(".opcion").removeClass("shadow-lg");
+            $(this).addClass("shadow-lg shadow-clay fill-red-700");
+            
+            if($(this).hasClass("mecanico")){
+                $(".inputs").empty();
+                $(".inputs").append($("<div>").addClass("inputContainer").append("<label>",{text:"Descripción"}).append("<input>",{type:"text"}));
+            }
+        });
+    })
+</script>
+{% endblock %}

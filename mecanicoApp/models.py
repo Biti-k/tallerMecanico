@@ -17,6 +17,9 @@ class Cliente(models.Model):
     telf = models.CharField(max_length=9, blank=True, null=True)
     direccion = models.CharField(max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return self.nombre + " " + self.apellido + " - " + self.nif
+    
     class Meta:
         managed = False
         db_table = 'cliente'
@@ -28,6 +31,9 @@ class Coche(models.Model):
     km = models.IntegerField(db_column='kM')  # Field name made lowercase.
     cliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cliente')
 
+    def __str__(self):
+        return self.matricula + " - " + self.modelo.modelo
+    
     class Meta:
         managed = False
         db_table = 'coche'
@@ -62,8 +68,8 @@ class Linea(models.Model):
     reparacion = models.ForeignKey('Reparacion', models.DO_NOTHING, db_column='reparacion')
     pack = models.ForeignKey('Pack', models.DO_NOTHING, db_column='pack', blank=True, null=True)
     cantidad = models.FloatField()
+    horas = models.FloatField()
     precio = models.FloatField(blank=True, null=True)
-    cod_fabricante = models.IntegerField(blank=True, null=True)
     precio_total = models.FloatField(blank=True, null=True)
     tipo = models.ForeignKey('TipoLinea', models.DO_NOTHING, db_column='tipo')
     descuento = models.FloatField(blank=True, null=True)

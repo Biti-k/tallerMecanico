@@ -2,7 +2,64 @@
 {% load static %}
 {% block title %}Taller Mecanico - Recepcion{% endblock %}
 {% block content %}
-<div class="w-full h-full">
-    Recepcion!
+<div class="flex w-full min-h-full bg-greenDarkest">
+    <div class="w-full p-8 contenido">
+        <h1 class="mb-12 text-5xl font-bold text-center text-green1">Recepción</h1>
+        <div class="flex w-full gap-4">
+            <div class="flex justify-center gap-3 opciones w-[50%]">
+                <div class="w-full h-auto">
+                    <h2 class="text-3xl font-bold text-center text-green1">Crear nueva reparación</h2>
+                    <form action="{% url 'recepcion' %}" method="post">
+                        {% csrf_token %}
+                        {% for field in form_crear_reparacion %}
+                            <div class="flex items-center justify-center w-full inputContainer">
+                                <div class="flex flex-col w-full mx-auto mt-12">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <button type="submit" name="action" value="coche_nuevo" class="flex justify-center w-auto p-2 mt-2 text-base font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark">Insertar nuevo coche</button>
+                        <button type="submit" value="crear_reparacion" class="flex justify-center w-full p-3 mx-auto mt-2 font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark" name="action">Crear reparación</button>
+                    </form>
+                    {% if message != null %}
+                    <p class="p-2 text-center bg-transparent rounded mt-7 text-green1">{{ message }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="w-[50%]">
+                <h2 class="text-3xl font-bold text-center text-green1">Reparaciones</h2>
+            </div>
+        </div>
+
+    </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $("input[value=coche_nuevo]").prop("disabled", true)
+        $("#cochesSelect").append($("<option>").text("---------").val("-1"));
+        $("#clientesSelect").change(function() {
+        let selected_value = $(this).val();
+        $.ajax({
+            //url: `http://127.0.0.1:8000/get_coches_cliente/${selected_value}`, // Replace with your view URL
+            url: `{% url 'get_coches_cliente'%}`,
+            type: "GET",
+            data: {
+            cliente_id: selected_value
+            },
+            success: function(data) {
+                console.info(data);
+                $("#cochesSelect").empty(); 
+                $("#cochesSelect").append($("<option>").text("---------").val("-1"));
+                $(data).each(function(i,e){
+                    $("#cochesSelect").append($("<option>").text(e.matricula + " - " + e.modelo).val(e.matricula));
+                });
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        });
+        });
+    });
+</script>
 {% endblock %}

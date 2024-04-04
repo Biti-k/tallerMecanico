@@ -1,0 +1,135 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Coche Nuevo{% endblock %}
+{% block content %}
+<div class="flex flex-col justify-center w-full h-auto min-h-full p-20 bg-greenDarkest">
+    <form method="post" action="{% url 'coche_nuevo' cliente=cliente %}">
+        <h1 class="mt-8 text-3xl font-bold text-center text-green1">Insertar coche nuevo para cliente con NIF: <u>{{ cliente }}</u></h1>
+        {% csrf_token %}
+        {% for field in form %}
+            <input type="hidden" name="cliente" value="{{ cliente }}">
+            <input type="hidden" name="modelo" value="">
+            <div class="flex items-center justify-center w-full inputContainer">
+                <div class="flex flex-col w-full mx-auto mt-12">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <h2 class="mt-8 text-3xl font-bold text-center text-green1">Modelos</h2>
+        <div class="mt-8 mb-8 search">
+            <div>
+                <label for="hs-trailing-button-add-on-with-icon-and-button" class="sr-only">Label</label>
+                <div class="relative flex rounded-lg shadow-sm">
+                  <input type="text" id="filtro" class="block w-full px-4 py-3 text-sm border-none shadow-sm bg-greenDark ps-11 rounded-s-lg focus:z-10 focus:border-green1 focus:ring-green1 disabled:opacity-50 text-green1 placeholder:text-greenDarkest placeholder:text-base" placeholder="Buscar un modelo">
+                  <div class="absolute inset-y-0 z-20 flex items-center pointer-events-none start-0 ps-4">
+                    <svg class="flex-shrink-0 text-gray-400 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  </div>
+                  <button type="button" id="filtrar" class="w-[25%] inline-flex items-center justify-center px-4 py-3 text-sm font-semibold transition duration-300 border border-transparent text-greenDarkest bg-green1 gap-x-2 rounded-e-md hover:bg-clay disabled:opacity-50 ">Filtrar</button>
+                </div>
+              </div>
+        </div>
+        <div class="flex flex-col w-full h-auto gap-1 p-5 mb-8 rounded-md shadow-md modelos bg-greenDark shadow-greenDark">
+            <div class="flex gap-3 botones">
+                <button class="flex justify-center w-[50%] p-2 mt-2 text-base font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDarkest" id="anterior">ANTERIOR</button>
+                <button class="flex justify-center w-[50%] p-2 mt-2 text-base font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDarkest" id="siguiente">SIGUIENTE</button>
+            </div>
+        </div>
+        <input type="submit" value="Insertar coche" id="submit" class="flex justify-center w-full p-3 mt-2 mb-8 text-base font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark">
+    </form>
+    <script>
+        $("#submit").on("click", function(event){
+            if($("input[name='modelo']").val() == ""){
+                $(".modeloSeleccionado").remove();
+                $("<p>", {"class":"text-clay bg-greenDark p-3 rounded modeloSeleccionado"}).text("Tienes que seleccionar un modelo!").insertAfter(".modelos");
+                event.preventDefault();
+            }
+            if(!$("input[name='matricula'").val().match(/^[0-9]{4}[b|c|d|f|g|h|j|k|l|m|n|p|r|s|t|v|w|x|y|z]{3}$/i)){
+                $("<p>", {"class":"text-clay bg-greenDark p-3 rounded modeloSeleccionado mt-8"}).text("Formato de matricula incorrecto").insertAfter("input[name='matricula']");
+                event.preventDefault();
+            }
+        });
+
+        let page = 1;
+        function seleccionarModelo(id , modelo){
+            $("input[name='modelo']").val(id);
+            $(".modeloSeleccionado").remove();
+            $("<p>", {"class":"text-clay bg-greenDark p-3 rounded modeloSeleccionado"}).text("Modelo seleccionado: " + modelo).insertAfter(".modelos");
+            $(".modelo").each(function(i,e){
+                if($(e).children("p").text() == modelo){
+                    $(e).children("button").text("Seleccionado").css("background-color", "#35495e");  
+                }else{
+                    $(e).children("button").text("Seleccionar").css("background-color", "transparent");
+                }
+            });
+        }
+
+        function pagina(){
+            let filtro = $("#filtro").val();
+            if(filtro){
+                $.ajax({
+                    url: "{% url 'get_modelos' %}",
+                    type: "GET",
+                    data: {page: page, filtro: filtro},
+                    success: function(data) {
+                        $(".modelos").children(".modelo").remove();
+                        $(data).each(function(i,e){
+                            $(".modelos").prepend($("<div>", {"class":"flex justify-between items-center modelo"}).append($("<p>", {"class":"text-green1"}).text(e.modelo)).append($("<button>", {"class":"buttonTransparent"}).text("Seleccionar").on("click", function(event){
+                                event.preventDefault();
+                                seleccionarModelo(e.id, e.modelo);
+                            })))
+                        });
+                    },
+                    error: function(data) {
+                        $(".modelos").children("p").remove();
+                        $(".modelos").prepend($("<p>", {"class":"text-green1"}).text("No hay modelos disponibles"));
+                    }
+                });
+            }else{
+                $.ajax({
+                    url: "{% url 'get_modelos' %}",
+                    type: "GET",
+                    data: {page: page},
+                    success: function(data) {
+                        $(".modelos").children(".modelo").remove();
+                        $(data).each(function(i,e){
+                            $(".modelos").prepend($("<div>", {"class":"flex justify-between items-center modelo"}).append($("<p>", {"class":"text-green1"}).text(e.modelo)).append($("<button>", {"class":"buttonTransparent"}).text("Seleccionar").on("click", function(event){
+                                event.preventDefault();
+                                seleccionarModelo(e.id, e.modelo);
+                            })))
+                        });
+                    },
+                    error: function(data) {
+                        $(".modelos").children("p").remove();
+                        $(".modelos").prepend($("<p>", {"class":"text-green1"}).text("No hay modelos disponibles"));
+                    }
+                });
+            }
+        }
+
+        $("#filtrar").on("click", function(){
+            pagina();
+        });
+
+        $("#siguiente").click(function(event){
+            event.preventDefault();
+            page++;
+            pagina();
+        });
+        
+        $("#anterior").click(function(event) {
+            event.preventDefault();
+            if (page > 1) {
+                page--;
+                pagina();
+            }
+        })
+
+        $(document).ready()
+        {
+            pagina();
+        }
+    </script>
+</div>
+{% endblock %}

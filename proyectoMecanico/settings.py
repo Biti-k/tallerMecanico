@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+TAILWIND_APP_NAME = 'theme'
 
 # Application definition
 
@@ -37,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mecanicoApp'
+    'mecanicoApp',
+    "django_web_components",
+    "tailwind",
+    "theme",
 ]
 
 MIDDLEWARE = [
@@ -64,6 +68,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            "builtins": [
+                 "django_web_components.templatetags.components",
+            ]
         },
     },
 ]
@@ -107,6 +114,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+NPM_BIN_PATH = "D:\\Things\\NODE\\npm.cmd"
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

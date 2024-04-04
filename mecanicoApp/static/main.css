@@ -1,3 +1,17 @@
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #42b883;
+  -webkit-text-fill-color: #42b883;
+  -webkit-box-shadow: 0 0 0px 1000px #347474 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
 * {
   font-family: "Ubuntu", sans-serif;
 }
@@ -32,7 +46,23 @@ body {
   background-color: #347474;
   color: #42b883;
 }
+.inputContainer input::placeholder {
+  color: #35495e;
+}
 .inputContainer input:focus {
+  outline: 2px solid #42b883;
+}
+.inputContainer select {
+  box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  height: 40px;
+  padding-left: 10px;
+  background-color: #347474;
+  color: #42b883;
+}
+.inputContainer select:focus {
   outline: 2px solid #42b883;
 }
 .submit {

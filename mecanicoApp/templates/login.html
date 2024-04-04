@@ -11,8 +11,8 @@
 
         </div>
     </div>
-    <div class="z-20 flex w-3/4 rounded shadow-xl bg-greenDarkest h-3/4 loginPage shadow-slate-800/50">
-        <div class="relative w-2/5 h-full rounded image-car">
+    <div class="z-20 flex w-3/4 h-auto max-h-full rounded shadow-xl bg-greenDarkest loginPage shadow-slate-800/50">
+        <div class="relative w-2/5 rounded h-[80vh] max-h-screen image-car">
             <img src="{% static 'imgs/drifting.jpg'%}" class="object-cover object-center w-full h-full rounded-l">
             <div class="absolute top-0 w-full h-full rounded-l overlay bg-greenDark opacity-40"></div>
         </div>
@@ -28,7 +28,12 @@
                         </div>
                     </div>
                 {% endfor %}
-                <input type="submit" value="Iniciar sesión" class="h-16 mt-20 text-xl rounded-full shadow-xl w-60 bg-clay submit text-greenDarkest shadow-clay/40">
+                <input type="submit" value="Iniciar sesión" class="h-16 mt-12 text-xl rounded-full shadow-xl w-60 bg-clay submit text-greenDarkest shadow-clay/40">
+                <div class="errors">
+                    {% if error_message %}
+                    <p class="p-2 rounded mt-7 text-clay bg-greenDark">{{ error_message }}</p>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </div>

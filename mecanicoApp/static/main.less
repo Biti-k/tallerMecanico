@@ -2,6 +2,21 @@
 @greenDark : #347474;
 @greenDarkest : #35495e;
 @clay : #ff7e67;
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid @green1;
+  -webkit-text-fill-color: @green1;
+  -webkit-box-shadow: 0 0 0px 1000px @greenDark inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 *{
     font-family: "Ubuntu", sans-serif;
 }
@@ -29,6 +44,22 @@ body{
         color: @green1;
     }
     input{
+        &::placeholder{
+            color: @greenDarkest;
+        }
+        box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        height: 40px;
+        padding-left: 10px;
+        background-color: @greenDark;
+        color: @green1;
+        &:focus{
+            outline:2px solid @green1;
+        }
+    }
+    select{
         box-shadow: 0 20px 25px -5px #3474749b, 0 8px 10px -6px rgb(0 0 0 / 0.1);
         width: 100%;
         border: none;
