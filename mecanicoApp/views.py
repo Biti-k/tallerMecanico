@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import LoginForm, CrearReparacionForm, CocheNuevo as CocheForm
+from .forms import LoginForm, CrearReparacionForm, CocheNuevo as CocheForm, AgregarLinea
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import datetime
-from .models import Cliente, Coche, Reparacion, Factura, Linea, MarcaModelo
+from .models import Cliente, Coche, Reparacion, Factura, Linea, MarcaModelo, Pack
 from django.http import JsonResponse
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -45,6 +45,15 @@ def reparacion(request, id):
     reparacion = Reparacion.objects.get(pk=id, estado="A")
     lineas = Linea.objects.filter(reparacion=id)
     return render(request, 'reparacion.html', {"reparacion":reparacion, "lineas":lineas})
+
+def agregar_linea(request, id_reparacion):
+    if(is_mecanico(request.user) == True or is_recepcion(request.user) == True):
+        reparacion = Reparacion.objects.get(pk=id_reparacion)
+        packs = Pack.objects.all()
+        if(request.method == "GET"):
+            return render(request, 'agregar_linea.html', {"reparacion":reparacion, "form": AgregarLinea, "packs":packs})
+
+
 
 def reparacion_recepcion(request, id):
     if(is_recepcion(request.user) == False):
@@ -114,18 +123,12 @@ def get_modelos(request):
     if(request.GET.get('filtro')):
         modelos = MarcaModelo.objects.filter(modelo__icontains=request.GET.get('filtro'))
     else:
-        modelos = MarcaModelo.objects.all()  # Create a queryset
+        modelos = MarcaModelo.objects.all()
 
-    paginator = Paginator(modelos, 8)  # Use the queryset for pagination
+    paginator = Paginator(modelos, 8)
 
-    # Access the page object based on the request parameter (assuming you have logic to get the page number)
-    page_number = request.GET.get('page')  # Example: Assuming you're using a GET parameter for the page
+    page_number = request.GET.get('page')
     page_object = paginator.get_page(page_number)
 
-    # Access the results on the requested page
     modelos_after = list(page_object.object_list.values())
     return JsonResponse(modelos_after,safe=False)
-
-
-""" 
-                return render(request, 'recepcion.html', {"form_crear_reparacion": CrearForm, "message" : "Reparacion creada correctamente"}) """

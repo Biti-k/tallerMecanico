@@ -1,0 +1,69 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Agregar línea{% endblock %}
+{% block content %}
+<div class="flex flex-col justify-center w-full h-auto min-h-full p-20 bg-greenDarkest">
+    <form class="flex flex-col">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="flex items-center justify-center w-full inputContainer">
+                <div class="flex flex-col w-full mx-auto mt-12">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+
+            </div>
+        {% endfor %}
+        <div class="flex items-center justify-center w-full inputContainer desc">
+            <div class="flex flex-col w-full mx-auto mt-12">
+                <label>Descripción</label>
+                <input type="text" name="descripcion" required="true">
+            </div>
+        
+        </div>
+        <div class="flex items-center justify-center w-full inputContainer cantidad">
+            <div class="flex flex-col w-full mx-auto mt-12">
+                <label>Cantidad/horas</label>
+                <input type="number" name="cantidad" required="true">
+            </div>
+        
+        </div>
+        <div class="flex items-center justify-center w-full inputContainer pack">
+            <div class="flex flex-col w-full mx-auto mt-12">
+                <label>Pack</label>
+                <select name="pack" required="true">
+                    <option value="">Seleccionar pack</option>
+                    {% for pack in packs %}
+                        <option value="{{pack.id}}">
+                            {{pack.accion}}
+                        </option>
+
+                    {% endfor %}
+                </select>
+            </div>
+        
+        </div>
+        <button type="submit" value="agregar_linea" class="flex justify-center w-full p-3 mx-auto mt-2 font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark" name="action">Agregar línea</button>
+        
+    </form>
+</div>
+<script>
+    $(document).ready(function(){
+        $(".desc").hide();
+        $(".cantidad").hide();
+        $(".pack").hide();
+        $(".tipo").on("change", function(){
+            if($(this).val() == "P"){
+                $(".pack").show();
+            }
+            if($(this).val() == "M"){
+                $(".desc").show();
+                $(".cantidad").show();
+            }else{
+                $(".desc").hide();
+                $(".cantidad").hide();
+            }
+        })
+    })
+</script>
+{% endblock %}

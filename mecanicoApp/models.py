@@ -68,7 +68,6 @@ class Linea(models.Model):
     reparacion = models.ForeignKey('Reparacion', models.DO_NOTHING, db_column='reparacion')
     pack = models.ForeignKey('Pack', models.DO_NOTHING, db_column='pack', blank=True, null=True)
     cantidad = models.FloatField()
-    horas = models.FloatField()
     precio = models.FloatField(blank=True, null=True)
     precio_total = models.FloatField(blank=True, null=True)
     tipo = models.ForeignKey('TipoLinea', models.DO_NOTHING, db_column='tipo')

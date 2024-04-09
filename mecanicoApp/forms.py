@@ -14,3 +14,13 @@ class CrearReparacionForm(forms.Form):
 class CocheNuevo(forms.Form):
     matricula = forms.CharField(label="Matrícula", max_length=7, required=True, label_suffix='')
     km = forms.IntegerField(label="Kilometraje", required=True, label_suffix='',min_value=0)
+
+class AgregarLinea(forms.Form):
+    CHOICES = [
+        ('', 'Selecciona una opción'),
+        ('O', 'Otros'),
+        ('M', 'Trabajo que hace el mecánico'),
+        ('R', 'Piezas de recambio'),
+        ('P', 'Pack')
+    ]
+    tipo_linea = forms.ChoiceField(label="Tipo de línea", required=True, label_suffix='', choices=CHOICES, widget=forms.Select(attrs={'class': 'tipo'}),)
