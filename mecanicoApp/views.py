@@ -3,11 +3,16 @@ from .forms import LoginForm, CrearReparacionForm, CocheNuevo as CocheForm, Agre
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import datetime
-from .models import Cliente, Coche, Reparacion, Factura, Linea, MarcaModelo, Pack
+import os
+from .models import Cliente, Coche, Reparacion, Factura, Linea, MarcaModelo, Pack, TipoLinea
 from django.http import JsonResponse
 import json
+from django.conf import settings 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import Paginator
+
+
+
 
 def is_recepcion(user):
     if (user.groups.filter(name="recepcion").exists()):
@@ -52,8 +57,31 @@ def agregar_linea(request, id_reparacion):
         packs = Pack.objects.all()
         if(request.method == "GET"):
             return render(request, 'agregar_linea.html', {"reparacion":reparacion, "form": AgregarLinea, "packs":packs})
+        elif(request.method == "POST"):
+            if(request.POST["tipo_linea"] == "M"):
+                tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
+                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=0,precio_total=0,tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea.save()
+            elif(request.POST["tipo_linea"] == "O"):
+                tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
+                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=request.POST["precio"],tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea.save()
+            elif(request.POST["tipo_linea"] == "R"):
+                tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
+                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=float(request.POST["precio"])*float(request.POST["cantidad"]),tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea.save()
+            elif(request.POST["tipo_linea"] == "P"):
+                pack = Pack.objects.get(pk=request.POST["pack"])
+                tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
+                linea = Linea(tarea=pack.accion, reparacion=reparacion,cantidad=request.POST["cantidad"], precio=pack.coste,precio_total=pack.coste,tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea.save()
+            return redirect("reparacion", id=id_reparacion)
 
-
+def rechazar_reparacion(request, id_reparacion):
+    reparacion = Reparacion.objects.get(pk=id_reparacion)
+    reparacion.estado = "R"
+    reparacion.save()
+    return redirect("mecanico")
 
 def reparacion_recepcion(request, id):
     if(is_recepcion(request.user) == False):

@@ -3,7 +3,7 @@
 {% block title %}Taller Mecanico - Agregar línea{% endblock %}
 {% block content %}
 <div class="flex flex-col justify-center w-full h-auto min-h-full p-20 bg-greenDarkest">
-    <form class="flex flex-col">
+    <form class="flex flex-col" method="POST">
         {% csrf_token %}
         {% for field in form %}
             <div class="flex items-center justify-center w-full inputContainer">
@@ -11,27 +11,26 @@
                     {{ field.label_tag }}
                     {{ field }}
                 </div>
-
             </div>
         {% endfor %}
         <div class="flex items-center justify-center w-full inputContainer desc">
             <div class="flex flex-col w-full mx-auto mt-12">
                 <label>Descripción</label>
-                <input type="text" name="descripcion" required="true">
+                <input type="text" name="descripcion" required="true" value=" ">
             </div>
         
         </div>
         <div class="flex items-center justify-center w-full inputContainer cantidad">
             <div class="flex flex-col w-full mx-auto mt-12">
                 <label>Cantidad/horas</label>
-                <input type="number" name="cantidad" required="true">
+                <input type="number" name="cantidad" required="true" value="1">
             </div>
         
         </div>
         <div class="flex items-center justify-center w-full inputContainer pack">
             <div class="flex flex-col w-full mx-auto mt-12">
                 <label>Pack</label>
-                <select name="pack" required="true">
+                <select name="pack">
                     <option value="">Seleccionar pack</option>
                     {% for pack in packs %}
                         <option value="{{pack.id}}">
@@ -41,8 +40,21 @@
                     {% endfor %}
                 </select>
             </div>
-        
         </div>
+        <div class="flex items-center justify-center w-full inputContainer descuento">
+            <div class="flex flex-col w-full mx-auto mt-12">
+                <label>Descuento</label>
+                <input type="number" name="descuento" required="true" value="0">
+            </div>
+        </div>
+        <div class="flex items-center justify-center w-full inputContainer precio">
+            <div class="flex flex-col w-full mx-auto mt-12">
+                <label>Precio</label>
+                <input type="number" name="precio" required="true" value="0">
+            </div>
+        </div>
+        
+
         <button type="submit" value="agregar_linea" class="flex justify-center w-full p-3 mx-auto mt-2 font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark" name="action">Agregar línea</button>
         
     </form>
@@ -52,16 +64,30 @@
         $(".desc").hide();
         $(".cantidad").hide();
         $(".pack").hide();
+        $(".precio").hide();
+        $(".descuento").hide();
         $(".tipo").on("change", function(){
+            $(".descuento").hide();
+            $(".desc").hide();
+            $(".cantidad").hide();
+            $(".pack").hide();
+            $(".precio").hide();
             if($(this).val() == "P"){
                 $(".pack").show();
-            }
-            if($(this).val() == "M"){
+                $(".descuento").show();
+            }else if($(this).val() == "M"){
                 $(".desc").show();
                 $(".cantidad").show();
-            }else{
-                $(".desc").hide();
-                $(".cantidad").hide();
+                $(".descuento").show();
+            }else if($(this).val() == "O"){
+                $(".desc").show();
+                $(".descuento").show();
+                $(".precio").show();
+            }else if($(this).val() == "R"){
+                $(".precio").show();
+                $(".cantidad").show();
+                $(".desc").show();
+                $(".descuento").show();
             }
         })
     })
