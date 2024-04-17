@@ -75,7 +75,21 @@ def agregar_linea(request, id_reparacion):
                 tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
                 linea = Linea(tarea=pack.accion, reparacion=reparacion,cantidad=request.POST["cantidad"], precio=pack.coste,precio_total=pack.coste,tipo=tipo_linea, descuento=request.POST["descuento"])
                 linea.save()
-            return redirect("reparacion", id=id_reparacion)
+            if(is_mecanico(request.user)):
+                return redirect("reparacion", id=id_reparacion)
+            elif(is_recepcion(request.user)):
+                return redirect("reparacion_recepcion", id=id_reparacion)
+
+
+def eliminar_linea(request, id_linea):
+    if(is_mecanico(request.user) or is_recepcion(request.user)):
+        linea = Linea.objects.get(pk=id_linea)
+        linea.delete()
+        if(is_mecanico(request.user)):
+            return redirect("reparacion", id=linea.reparacion.id)
+        elif(is_recepcion(request.user)):
+            return redirect("reparacion_recepcion", id=linea.reparacion.id)
+    return redirect("/")
 
 def rechazar_reparacion(request, id_reparacion):
     reparacion = Reparacion.objects.get(pk=id_reparacion)
@@ -87,7 +101,8 @@ def reparacion_recepcion(request, id):
     if(is_recepcion(request.user) == False):
         return redirect("/login")
     reparacion = Reparacion.objects.get(pk=id)
-    return render(request, 'reparacionRecepcion.html', {"reparacion":reparacion})
+    lineas = Linea.objects.filter(reparacion=reparacion)
+    return render(request, 'reparacionRecepcion.html', {"reparacion":reparacion, "lineas":lineas})
 
 def login_usuario(request):        
     if request.method == "POST":
@@ -120,6 +135,7 @@ def recepcion(request):
     if(is_mecanico(request.user)):
         return redirect("/login")
     elif(is_recepcion(request.user)):
+        reparaciones = Reparacion.objects.filter(estado="C")
         if request.method == "POST":
             accion = request.POST['action']
             if(accion == "crear_reparacion"):
@@ -135,9 +151,13 @@ def recepcion(request):
             elif(accion == "coche_nuevo"):
                 cliente = request.POST["cliente"]
                 return redirect("coche_nuevo", cliente)
-            return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "message" : ""})
+            return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "message" : "", "reparaciones" : reparaciones })
         else:
-            return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm})
+            todo = False
+            if(request.GET.get("todo")):
+                reparaciones = Reparacion.objects.all()
+                todo = True
+            return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "reparaciones" : reparaciones, "todo" : todo})
         
 def get_coches_cliente(request):
     cliente = Cliente.objects.get(pk=request.GET['cliente_id'])
@@ -160,3 +180,6 @@ def get_modelos(request):
 
     modelos_after = list(page_object.object_list.values())
     return JsonResponse(modelos_after,safe=False)
+
+def modificar_linea_recepcion(request):
+    pass

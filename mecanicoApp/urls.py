@@ -9,11 +9,13 @@ urlpatterns = [
     path('mecanico/', views.mecanico, name="mecanico"),
     path('recepcion/coche_nuevo/<str:cliente>', views.coche_nuevo, name="coche_nuevo"),
     path('get_coches_cliente', views.get_coches_cliente, name="get_coches_cliente"),
-    path('get_modelos', views.get_modelos, name="get_modelos"),
+    path('get_modelos', views.get_modelos, name="get_modelos"), 
     path("mecanico/reparacion/<int:id>", views.reparacion, name="reparacion"),   
     path("agregar_linea/<int:id_reparacion>", views.agregar_linea, name="agregar_linea"),   
+    path("eliminar_linea/<int:id_linea>", views.eliminar_linea, name="eliminar_linea"),   
     path("recepcion/reparacion/<int:id>", views.reparacion_recepcion, name="reparacion_recepcion"),
     path("mecanico/rechazar_reparacion/<int:id_reparacion>", views.rechazar_reparacion, name="rechazar_reparacion"),
+
 
 ]
 
