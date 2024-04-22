@@ -20,6 +20,8 @@ urlpatterns = [
     path("mecanico/modificar_linea/<int:id>", views.modificar_linea_mecanico, name="modificar_linea_mecanico"),
     path("mecanico/rechazar_reparacion/<int:id_reparacion>", views.rechazar_reparacion, name="rechazar_reparacion"),
     path("mecanico/cerrar_reparacion/<int:id_reparacion>", views.cerrar_reparacion, name="cerrar_reparacion"),
+    path("recepcion/finalizar_recepcion/<int:id_reparacion>", views.finalizar_recepcion, name="finalizar_recepcion"),
+    path("recepcion/crear_reparacion_recepcion/<int:id_reparacion>", views.crear_reparacion_recepcion, name="crear_reparacion_recepcion"),
     path("logout", views.logout_view, name="logout"),
 ]
 

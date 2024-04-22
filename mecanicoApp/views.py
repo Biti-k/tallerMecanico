@@ -84,6 +84,8 @@ def agregar_linea(request, id_reparacion):
             if(is_mecanico(request.user)):
                 return redirect("reparacion", id=id_reparacion)
             elif(is_recepcion(request.user)):
+                if(reparacion.estado == "X"):
+                    return redirect("crear_reparacion_recepcion", id_reparacion=id_reparacion)
                 return redirect("reparacion_recepcion", id=id_reparacion)
 
 
@@ -137,6 +139,20 @@ def coche_nuevo(request, cliente):
             return redirect("recepcion")
     return render(request, 'coche_nuevo.html', {"cliente": cliente, "form":CocheForm})
 
+def finalizar_recepcion(request, id_reparacion):
+    reparacion = Reparacion.objects.get(pk=id_reparacion)
+    reparacion.estado = "A"
+    reparacion.save()
+    return redirect("recepcion")
+
+def crear_reparacion_recepcion(request, id_reparacion):
+    if(is_recepcion(request.user)):
+            reparacion = Reparacion.objects.get(pk=id_reparacion)
+            lineas = Linea.objects.filter(reparacion=id_reparacion)
+            return render(request, 'crear_reparacion.html', {"reparacion":reparacion, "lineas":lineas})
+    else:
+        return redirect("/login")
+
 def recepcion(request):
     if(is_mecanico(request.user)):
         return redirect("/login")
@@ -151,9 +167,9 @@ def recepcion(request):
                     return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "message" : "Selecciona un coche valido"})
                 coche = Coche.objects.get(pk=request.POST['coche'])
                 fecha = datetime.datetime.now()
-                reparacion = Reparacion(cliente=cliente, coche=coche, fecha=fecha, estado="A")
+                reparacion = Reparacion(cliente=cliente, coche=coche, fecha=fecha, estado="X")
                 reparacion.save()
-                return redirect("reparacion_recepcion", reparacion.pk)
+                return redirect("crear_reparacion_recepcion", id_reparacion=reparacion.id)
             elif(accion == "coche_nuevo"):
                 cliente = request.POST["cliente"]
                 return redirect("coche_nuevo", cliente)

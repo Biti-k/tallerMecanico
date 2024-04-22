@@ -1,0 +1,70 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Mecanico{% endblock %}
+{% block content %}
+<div class="flex w-full min-h-full bg-greenDarkest">
+    <div class="w-full p-8 contenido">
+        <h1 class="mb-4 text-4xl text-center text-green1">Recepción</h1>
+        <div class="w-full h-1 bg-greenDark"></div>
+        <h2 class="mt-8 text-3xl text-center underline transition cursor-pointer text-green1 reparacionesVolver hover:scale-90">Reparaciones</h2>
+        <form>
+            {% csrf_token %}
+            <div class="flex flex-wrap justify-center gap-2 mt-8 reparaciones">
+                    <div class="p-4 rounded-xl reparacion bg-transparent border-green1  transition border w-[100%] h-auto flex flex-col justify-center">
+                        <p class="text-center text-green1 whitespace-nowrap">Cliente<br>{{reparacion.cliente}}</p>
+                        <div class="w-full h-[1px] bg-greenDark"></div>
+                        <p class="text-center text-green1">Coche<br>{{reparacion.coche}}</p>
+                        <div class="w-full h-[1px] bg-greenDark"></div>
+                        <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
+                        <div class="w-full h-[1px] bg-greenDark mb-2"></div>
+                        <div class="flex justify-center">
+                            <div>
+                                <a href="{% url 'agregar_linea' id_reparacion=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Agregar linea <i class="fa-solid fa-square-plus"></i></a>
+                                <a href="{% url 'finalizar_recepcion' id_reparacion=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Crear reparación<i class="fa-regular fa-circle-check"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-8 mb-3 text-2xl text-center text-green1">Líneas</p>
+                <div class="flex flex-col gap-5 lineas">
+                    {% for linea in lineas %}
+                    <div class="flex w-full p-3 rounded-lg linea bg-greenDark">
+                        <div class="flex w-[80%] gap-7">
+                            <div class="w-[20%]">
+                                <p class="font-bold text-green1">Descripción</p>
+                                <p class="text-green1">{{linea.tarea}}</p>
+                            </div>
+                            <div class="w-[20%]">
+                                <p class="font-bold text-green1">Tipo de línea</p>
+                                {% if linea.tipo.tipo == "O" %}
+                                    <p class="text-green1">Otros</p>
+                                {% elif linea.tipo.tipo == "M" %}
+                                    <p class="text-green1">Trabajos de mecánico</p>
+                                {% elif linea.tipo.tipo == "P" %}
+                                    <p class="text-green1">Pack</p>
+                                {% elif linea.tipo.tipo == "R" %}
+                                    <p class="text-green1">Pieza de recambio</p>
+                                {% endif %}
+                            </div>
+                            <div class="w-[20%]">
+                                <p class="font-bold text-green1">Coste total</p>
+                                <p class="text-green1">{{ linea.precio_total }} €</p>
+                            </div>
+                            <div class="w-[20%]">
+                                <p class="font-bold text-green1">Cantidad/horas </p>
+                                <p class="text-green1">{{ linea.cantidad}} </p>
+                            </div>
+                            <div class="w-[20%]">
+                                <p class="font-bold text-green1">Precio</p>
+                                <p class="text-green1">{{ linea.precio }} €</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                        <p class="text-center text-green1">Esta reparación no tiene líneas</p>
+                    {% endfor %}
+                </div>
+        </form>            
+    </div>
+</div>
+{% endblock %}
