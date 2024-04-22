@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-04-2024 a las 19:30:29
+-- Tiempo de generación: 22-04-2024 a las 19:52:05
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -279,7 +279,6 @@ CREATE TABLE `contador` (
 --
 
 INSERT INTO `contador` (`concepto`, `comptador`) VALUES
-('Factura', 2400),
 ('Factura', 2400);
 
 -- --------------------------------------------------------
@@ -423,7 +422,8 @@ CREATE TABLE `factura` (
   `t_IVA` float NOT NULL,
   `precio_obra` float NOT NULL,
   `precio_total` float NOT NULL,
-  `pagado` tinyint(1) NOT NULL
+  `pagado` tinyint(1) NOT NULL,
+  `datos_identificativos` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
