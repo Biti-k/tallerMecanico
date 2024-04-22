@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mecanicoApp',
-    "django_web_components",
     "tailwind",
     "theme",
 ]
