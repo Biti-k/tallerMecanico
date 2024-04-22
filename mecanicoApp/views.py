@@ -161,7 +161,7 @@ def recepcion(request):
         else:
             todo = False
             if(request.GET.get("todo")):
-                reparaciones = Reparacion.objects.all()
+                reparaciones = Reparacion.objects.all().order_by('estado').reverse()
                 todo = True
             return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "reparaciones" : reparaciones, "todo" : todo})
     else:

@@ -63,7 +63,9 @@
                             <div class="w-full h-[1px] bg-greenDark"></div>
                             <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
                             <div class="w-full h-[1px] bg-greenDark mb-2"></div>
-                            <a href="{% url 'reparacion_recepcion' id=reparacion.id%}" class="w-auto h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Gestionar reparacion <i class="fa-solid fa-pencil"></i></a>
+                            {% if reparacion.estado == "C" %}
+                                <a href="{% url 'reparacion_recepcion' id=reparacion.id%}" class="w-auto h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Gestionar reparacion <i class="fa-solid fa-pencil"></i></a>
+                            {% endif %}
                         </div>
     
                     {% endfor %}
