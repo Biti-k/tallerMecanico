@@ -10,7 +10,7 @@ import json
 from django.conf import settings 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import Paginator
-
+from django.contrib.auth import logout
 
 
 
@@ -63,17 +63,23 @@ def agregar_linea(request, id_reparacion):
                 linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=0,precio_total=0,tipo=tipo_linea, descuento=request.POST["descuento"])
                 linea.save()
             elif(request.POST["tipo_linea"] == "O"):
+                precio_total = float(request.POST["precio"]) - float(request.POST["precio"]) * float(request.POST["descuento"]) / 100
                 tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
-                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=request.POST["precio"],tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=precio_total,tipo=tipo_linea, descuento=request.POST["descuento"])
                 linea.save()
             elif(request.POST["tipo_linea"] == "R"):
+                precio_total = float(request.POST["precio"]) * float(request.POST['cantidad'])
+                precio_total = precio_total - float(request.POST["descuento"]) / 100
                 tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
-                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=float(request.POST["precio"])*float(request.POST["cantidad"]),tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea = Linea(tarea=request.POST["descripcion"], reparacion=reparacion,cantidad=request.POST["cantidad"], precio=request.POST["precio"],precio_total=precio_total,tipo=tipo_linea, descuento=request.POST["descuento"])
                 linea.save()
             elif(request.POST["tipo_linea"] == "P"):
+                if(request.POST["pack"] == ""):
+                    return render(request, 'agregar_linea.html', {"reparacion":reparacion, "form": AgregarLinea, "packs":packs, "error":"Selecciona un pack!"})
                 pack = Pack.objects.get(pk=request.POST["pack"])
+                precio_total = float(pack.coste) - float(request.POST["descuento"]) / 100
                 tipo_linea = TipoLinea.objects.get(pk=request.POST["tipo_linea"])
-                linea = Linea(tarea=pack.accion, reparacion=reparacion,cantidad=request.POST["cantidad"], precio=pack.coste,precio_total=pack.coste,tipo=tipo_linea, descuento=request.POST["descuento"])
+                linea = Linea(tarea=pack.accion, reparacion=reparacion,cantidad=request.POST["cantidad"], precio=pack.coste,precio_total=precio_total,tipo=tipo_linea, descuento=request.POST["descuento"])
                 linea.save()
             if(is_mecanico(request.user)):
                 return redirect("reparacion", id=id_reparacion)
@@ -158,6 +164,8 @@ def recepcion(request):
                 reparaciones = Reparacion.objects.all()
                 todo = True
             return render(request, 'recepcion.html', {"form_crear_reparacion": CrearReparacionForm, "reparaciones" : reparaciones, "todo" : todo})
+    else:
+        return redirect("/login")
         
 def get_coches_cliente(request):
     cliente = Cliente.objects.get(pk=request.GET['cliente_id'])
@@ -181,5 +189,86 @@ def get_modelos(request):
     modelos_after = list(page_object.object_list.values())
     return JsonResponse(modelos_after,safe=False)
 
-def modificar_linea_recepcion(request):
-    pass
+def modificar_linea_recepcion(request, id):
+    linea = Linea.objects.get(pk=id)
+    if(is_recepcion(request.user)):
+        if(request.method == 'GET'):
+            return render(request, 'modificar_linea_recepcion.html', {"linea" : linea})
+        elif(request.method == 'POST'):
+            desc = request.POST.get('descuento')
+            linea.descuento = desc
+            if(not linea.precio):
+                linea.precio = 0
+            precio_total = float(linea.cantidad) * float(linea.precio)
+            linea.precio_total = precio_total - float(precio_total) * float(linea.descuento) / 100
+            linea.save()
+            
+            return redirect("reparacion_recepcion", id=linea.reparacion.id)
+    else:
+        return redirect("/login")
+    
+def modificar_linea_mecanico(request, id):
+    linea = Linea.objects.get(pk=id)
+    packs = Pack.objects.all()
+    if(is_mecanico(request.user)):
+        if(request.method == "GET"):
+            return render(request, 'modificar_linea_mecanico.html', {"linea" : linea, "packs" : packs})
+        elif(request.method == 'POST'):
+            if(linea.tipo.tipo == "M"):
+                descripcion = request.POST.get("descripcion")
+                cantidad = request.POST.get("cantidad")
+                linea.tarea = descripcion
+                linea.cantidad = cantidad
+                linea.save()
+            elif(linea.tipo.tipo == "P"):
+                pack = request.POST.get("pack")
+                packInstance = Pack.objects.get(pk=pack)
+                linea.pack = packInstance
+                linea.tarea = packInstance.accion
+                linea.precio = packInstance.coste
+                linea.precio_total = linea.precio - linea.precio * linea.descuento / 100
+                linea.save()
+            elif(linea.tipo.tipo == "R"):
+                linea.tarea = request.POST["descripcion"]
+                linea.cantidad = request.POST["cantidad"]
+                linea.precio = request.POST["precio"]
+                linea.precio_total = float(linea.precio) * float(linea.cantidad)
+                linea.precio_total = linea.precio_total - linea.precio_total * float(linea.descuento) / 100
+                linea.save()
+            elif(linea.tipo.tipo == "O"):
+                linea.tarea = request.POST["descripcion"]
+                linea.cantidad = request.POST["cantidad"]
+                linea.precio = request.POST["precio"]
+                linea.precio_total = float(linea.precio) * float(linea.cantidad)
+                linea.precio_total = linea.precio_total - linea.precio_total * float(linea.descuento) / 100
+                linea.save()
+            return redirect("reparacion", id=linea.reparacion.id)
+    else:
+        return redirect("/login")
+    
+def logout_view(request):
+    logout(request)
+    return redirect("/login")
+
+def cerrar_reparacion(request, id_reparacion):
+    reparacion = Reparacion.objects.get(pk=id_reparacion)
+    reparacion.estado = "C"
+    reparacion.save()
+    return redirect("mecanico")
+
+
+def facturas(request):
+    if(is_recepcion(request.user)):
+        reparaciones = Reparacion.objects.filter(estado="F")
+        return render(request, "facturas.html", {"reparaciones":reparaciones})
+    else:
+        return redirect("/login")
+
+def facturar_reparacion(request, id):
+    if(is_recepcion(request.user)):
+        reparacion = Reparacion.objects.get(pk=id)
+        reparacion.estado = 'F'
+        reparacion.save()
+        return redirect("facturas")
+    else:
+        return redirect("/login")

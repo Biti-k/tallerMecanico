@@ -34,9 +34,8 @@
                     <option value="">Seleccionar pack</option>
                     {% for pack in packs %}
                         <option value="{{pack.id}}">
-                            {{pack.accion}}
+                            {{pack.accion}} - {{pack.coste}} €
                         </option>
-
                     {% endfor %}
                 </select>
             </div>
@@ -56,7 +55,9 @@
         
 
         <button type="submit" value="agregar_linea" class="flex justify-center w-full p-3 mx-auto mt-2 font-bold transition bg-transparent border cursor-pointer text-green1 rounded-xl border-green1 hover:bg-greenDark" name="action">Agregar línea</button>
-        
+        {% if error %}
+            <p class="text-lg text-center text-clay">{{error}}</p>
+        {% endif %}
     </form>
 </div>
 <script>
@@ -67,27 +68,22 @@
         $(".precio").hide();
         $(".descuento").hide();
         $(".tipo").on("change", function(){
-            $(".descuento").hide();
             $(".desc").hide();
             $(".cantidad").hide();
             $(".pack").hide();
             $(".precio").hide();
             if($(this).val() == "P"){
                 $(".pack").show();
-                $(".descuento").show();
             }else if($(this).val() == "M"){
                 $(".desc").show();
                 $(".cantidad").show();
-                $(".descuento").show();
             }else if($(this).val() == "O"){
                 $(".desc").show();
-                $(".descuento").show();
                 $(".precio").show();
             }else if($(this).val() == "R"){
                 $(".precio").show();
                 $(".cantidad").show();
                 $(".desc").show();
-                $(".descuento").show();
             }
         })
     })

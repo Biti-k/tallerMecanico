@@ -1,0 +1,67 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Modificar linea{% endblock %}
+{% block content %}
+<div class="flex w-full min-h-full bg-greenDarkest">
+    <div class="flex flex-col w-full p-8 contenido">
+        <form method="post">
+            {% csrf_token %}
+            {% if linea.tipo.tipo == 'M' %}
+                <p class="text-[50px] text-green1">Tarea</p>
+                <div class="inputContainer">
+                    <input type="text" name="descripcion" value="{{linea.tarea}}"/>
+                </div>
+                <p class="text-[50px] text-green1">Horas</p>
+                <div class="mt-6 inputContainer">
+                    <input type="number" name="cantidad" value="{{linea.cantidad}}" min="0"/>
+                </div>
+            {% endif %}
+            {% if linea.tipo.tipo == 'O' %}
+                <p class="text-[50px] text-green1">Tarea</p>
+                <div class="inputContainer">
+                    <input type="text" name="descripcion" value="{{linea.tarea}}"/>
+                </div>
+                <p class="text-[50px] text-green1">Cantidad</p>
+                <div class="mt-6 inputContainer">
+                    <input type="number" name="cantidad" value="{{linea.cantidad}}" min="0"/>
+                </div>
+                <p class="text-[50px] text-green1">Precio</p>
+                <div class="mt-6 inputContainer">
+                    <input type="number" name="precio" value="{{linea.precio}}" min="0"/>
+                </div>
+
+            {% endif %}
+            {% if linea.tipo.tipo == 'R' %}
+                <p class="text-[50px] text-green1">Pieza de recambio</p>
+                <div class="inputContainer">
+                    <input type="text" name="descripcion" value="{{linea.tarea}}"/>
+                </div>
+                <p class="text-[50px] text-green1">Cantidad</p>
+                <div class="mt-6 inputContainer">
+                    <input type="number" name="cantidad" value="{{linea.cantidad}}" min="0"/>
+                </div>
+                <p class="text-[50px] text-green1">Precio de la pieza</p>
+                <div class="mt-6 inputContainer">
+                    <input type="number" name="precio" value="{{linea.precio}}" min="0"/>
+                </div>
+
+            {% endif %}
+            {% if linea.tipo.tipo == 'P' %}
+                <p class="text-[50px] text-green1">Pack</p>
+                <div class="inputContainer">
+                    <select name="pack" required>
+                        <option value="">Selecciona un pack</option>
+                        {% for pack in packs %}
+                            <option value="{{pack.id}}">{{pack.accion}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            <div class="mt-5 inputContainer w-[250px] mx-auto">
+                <input type="submit" value="Realizar modificación" class="cursor-pointer">
+            </div>
+            
+        </form>
+    </div>
+</div>
+{% endblock %}

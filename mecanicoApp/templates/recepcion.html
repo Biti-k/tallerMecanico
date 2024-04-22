@@ -4,10 +4,14 @@
 {% block content %}
 <div class="flex w-full min-h-full bg-greenDarkest">
     <div class="w-full p-8 contenido">
+        <a href="{% url 'logout' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-clay">Cerrar sesión</a>
+        <a href="{% url 'recepcion' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-greenDarkest">Reparaciones</a>
+        <a href="{% url 'facturas' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-greenDarkest">Facturas</a>
         <h1 class="mb-12 text-5xl font-bold text-center text-green1">Recepción</h1>
-        <div class="flex w-full gap-4">
-            <div class="flex justify-center gap-3 opciones w-[50%]">
-                <div class="w-full h-auto">
+        <div class="flex flex-col w-full gap-4">
+            <div class="flex justify-center gap-3 mb-8 opciones">
+                <div class="w-[75%] h-auto">
+
                     <h2 class="text-3xl font-bold text-center text-green1">Crear nueva reparación</h2>
                     <form action="{% url 'recepcion' %}" method="post">
                         {% csrf_token %}
@@ -27,10 +31,10 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="w-[50%]">
+            <div class="">
                 <h2 class="text-3xl font-bold text-center text-green1">Reparaciones</h2>
                 {% if todo %}
-                    <div class="flex justify-center w-full"><a href="{% url 'recepcion'%}" class="mx-auto text-lg text-center underline text-green1">Mostrar cerradas/facturadas</a></div>
+                    <div class="flex justify-center w-full"><a href="{% url 'recepcion'%}" class="mx-auto text-lg text-center underline text-green1">Mostrar cerradas</a></div>
                 {% else %}
                     <div class="flex justify-center w-full"><a href="{% url 'recepcion'%}?todo=true" class="mx-auto text-lg text-center underline text-green1">Mostrar todo</a></div>
                 {% endif %}

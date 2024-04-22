@@ -6,8 +6,9 @@
     <div class="w-full p-8 contenido">
         <h1 class="mb-4 text-4xl text-center text-green1">Mecánico</h1>
         <div class="w-full h-1 bg-greenDark"></div>
-        <h2 class="mt-8 text-3xl text-center underline transition cursor-pointer text-green1 reparacionesVolver hover:scale-110">Reparaciones</h2>
+        <h2 class="mt-8 text-3xl text-center underline transition cursor-pointer text-green1 reparacionesVolver hover:scale-90">Reparaciones</h2>
         <form>
+            {% csrf_token %}
             <div class="flex flex-wrap justify-center gap-2 mt-8 reparaciones">
                     <div class="p-4 rounded-xl reparacion bg-transparent border-green1  transition border w-[100%] h-auto flex flex-col justify-center">
                         <p class="text-center text-green1 whitespace-nowrap">Cliente<br>{{reparacion.cliente}}</p>
@@ -20,6 +21,8 @@
                             <div>
                                 <a class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border cursor-pointer border-green1 text-green1 hover:bg-greenDark rechazar">Rechazar reparacion <i class="fa-regular fa-circle-xmark"></i></a>
                                 <a href="{% url 'agregar_linea' id_reparacion=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Agregar linea <i class="fa-solid fa-square-plus"></i></a>
+                                <a href="{% url 'cerrar_reparacion' id_reparacion=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Cerrar reparación<i class="fa-regular fa-circle-check"></i></a>
+                                
                             </div>
                         </div>
                     </div>
@@ -60,7 +63,7 @@
                         </div>
                         <div class="flex flex-col gap-2">
                             <a href="{%url 'eliminar_linea' id_linea=linea.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDarkest">Eliminar línea<i class="p-2 fa-regular fa-circle-xmark"></i></a>
-                            <a href="" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDarkest">Modificar línea<i class="p-2 fa-solid fa-pencil"></i></a>
+                            <a href="{% url 'modificar_linea_mecanico' id=linea.id %}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDarkest">Modificar línea<i class="p-2 fa-solid fa-pencil"></i></a>
                         </div>
                     </div>
                     {% empty %}
@@ -80,7 +83,7 @@
 
             <div class="absolute top-0 left-0 z-0 hidden w-screen h-screen opacity-65 bg-slate-500 fondoModal"></div>
         </div>
-
+            
     </div>
 </div>
 <script>

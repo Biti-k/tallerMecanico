@@ -4,7 +4,7 @@
 {% block content %}
 <div class="flex flex-col w-full min-h-full bg-greenDarkest ">
         <div class="w-full p-8 contenido">
-            <a href="{% url 'index'%}"><h2 class="mt-8 text-3xl text-center text-green1 hover:underline">Reparaciones</h2></a>
+            <a href="{% url 'index'%}"><h2 class="mt-8 text-3xl text-center underline transition text-green1 hover:scale-90">Reparaciones</h2></a>
             <form>
                 <div class="flex flex-wrap justify-center gap-2 mt-8 reparaciones">
                         <div class="p-4 rounded-xl reparacion bg-transparent border-green1  transition border w-[90%] h-auto flex flex-col justify-center">
@@ -14,11 +14,25 @@
                             <div class="w-full h-[1px] bg-greenDark"></div>
                             <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
                             <div class="w-full h-[1px] bg-greenDark mb-2"></div>
-                            <div class="flex justify-center">
-                                <div>
-                                    <a href="{% url 'agregar_linea' id_reparacion=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Agregar linea <i class="fa-solid fa-square-plus"></i></a>
-                                </div>
-                            </div>
+                            <p class="text-center text-green1">Estado<br>
+                                {% if reparacion.estado == "C" %}
+                                    Cerrada
+                                {% endif %}
+                                {% if reparacion.estado == "A" %}
+                                    Abierta
+                                {% endif %}
+                                {% if reparacion.estado == "R" %}
+                                    Rechazada
+                                {% endif %}
+                                {% if reparacion.estado == "F" %}
+                                    Facturada
+                                {% endif %}
+                                {% if reparacion.estado == "P" %}
+                                    Pagada
+                                {% endif %}
+                            </p>
+                            <div class="w-full h-[1px] bg-greenDark mb-2"></div>
+                            <a href="{% url 'facturar_reparacion' id=reparacion.id%}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Facturar reparación<i class="fa-solid fa-money-check-dollar"></i></a>
                         </div>
                 </div>
                 <p class="mt-8 mb-3 text-2xl text-center text-green1">Líneas</p>
@@ -26,11 +40,11 @@
                     {% for linea in lineas %}
                     <div class="flex w-full p-3 rounded-lg linea bg-greenDark">
                         <div class="flex w-[80%] gap-7">
-                            <div class="w-[20%]">
+                            <div class="w-[16.6%]">
                                 <p class="font-bold text-green1">Descripción</p>
                                 <p class="text-green1">{{linea.tarea}}</p>
                             </div>
-                            <div class="w-[20%]">
+                            <div class="w-[16.6%]">
                                 <p class="font-bold text-green1">Tipo de línea</p>
                                 {% if linea.tipo.tipo == "O" %}
                                     <p class="text-green1">Otros</p>
@@ -42,21 +56,32 @@
                                     <p class="text-green1">Pieza de recambio</p>
                                 {% endif %}
                             </div>
-                            <div class="w-[20%]">
+                            <div class="w-[16.6%]">
                                 <p class="font-bold text-green1">Coste total</p>
                                 <p class="text-green1">{{ linea.precio_total }} €</p>
                             </div>
-                            <div class="w-[20%]">
+                            <div class="w-[16.6%]">
                                 <p class="font-bold text-green1">Cantidad/horas </p>
                                 <p class="text-green1">{{ linea.cantidad}} </p>
                             </div>
-                            <div class="w-[20%]">
+                            <div class="w-[16.6%]">
                                 <p class="font-bold text-green1">Precio</p>
                                 <p class="text-green1">{{ linea.precio }} €</p>
                             </div>
+                            <div class="w-[16.6%]">
+                                <p class="font-bold text-green1">Descuento</p>
+                                <p class="text-green1">
+                                    {% if linea.descuento == None %}
+                                        0
+                                    {% else %}
+                                        {{ linea.descuento }}
+                                    {% endif %}
+                                    
+                                    %</p>
+                            </div>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <a href="" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDarkest">Modificar línea<i class="p-2 fa-solid fa-pencil"></i></a>
+                            <a href="{% url 'modificar_linea_recepcion' id=linea.id %}" class="w-40 h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDarkest">Modificar línea<i class="p-2 fa-solid fa-pencil"></i></a>
                         </div>
                     </div>
                     {% empty %}

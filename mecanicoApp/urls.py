@@ -14,8 +14,12 @@ urlpatterns = [
     path("agregar_linea/<int:id_reparacion>", views.agregar_linea, name="agregar_linea"),   
     path("eliminar_linea/<int:id_linea>", views.eliminar_linea, name="eliminar_linea"),   
     path("recepcion/reparacion/<int:id>", views.reparacion_recepcion, name="reparacion_recepcion"),
+    path("recepcion/facturar_reparacion/<int:id>", views.facturar_reparacion, name="facturar_reparacion"),
+    path("recepcion/modificar_linea/<int:id>", views.modificar_linea_recepcion, name="modificar_linea_recepcion"),
+    path("recepcion/facturas", views.facturas, name="facturas"),
+    path("mecanico/modificar_linea/<int:id>", views.modificar_linea_mecanico, name="modificar_linea_mecanico"),
     path("mecanico/rechazar_reparacion/<int:id_reparacion>", views.rechazar_reparacion, name="rechazar_reparacion"),
-
-
+    path("mecanico/cerrar_reparacion/<int:id_reparacion>", views.cerrar_reparacion, name="cerrar_reparacion"),
+    path("logout", views.logout_view, name="logout"),
 ]
 

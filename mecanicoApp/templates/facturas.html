@@ -1,0 +1,46 @@
+{% extends 'layouts/base-styles.html' %}
+{% load static %}
+{% block title %}Taller Mecanico - Facturas{% endblock %}
+{% block content %}
+<div class="flex w-full min-h-full bg-greenDarkest">
+    <div class="w-full p-8 contenido">
+        <a href="{% url 'logout' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-clay">Cerrar sesión</a>
+        <a href="{% url 'recepcion' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-greenDarkest">Reparaciones</a>
+        <a href="{% url 'facturas' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-greenDarkest">Facturas</a>
+        <h1 class="mb-12 text-5xl font-bold text-center text-green1">Facturas</h1>
+        <div class="flex flex-wrap justify-center gap-2 mt-8 reparaciones">
+            {% for reparacion in reparaciones %}
+                <div class="p-4 rounded-xl reparacion bg-transparent border-green1  transition border w-[400px] h-auto flex flex-col justify-center">
+                    <p class="text-center text-green1 whitespace-nowrap">Estado<br>
+                        {% if reparacion.estado == 'C' %}    
+                            Cerrada
+                        {% endif %}
+                        {% if reparacion.estado == 'A' %}    
+                            Abierta
+                        {% endif %}
+                        {% if reparacion.estado == 'R' %}    
+                            Rechazada
+                        {% endif %}
+                        {% if reparacion.estado == 'F' %}    
+                            Facturada
+                        {% endif %}
+                    </p>
+                    <div class="w-full h-[1px] bg-greenDark"></div>
+                    <p class="text-center text-green1 whitespace-nowrap">Cliente<br>{{reparacion.cliente}}</p>
+                    <div class="w-full h-[1px] bg-greenDark"></div>
+                    <p class="text-center text-green1">Coche<br>{{reparacion.coche|truncatechars:8}}</p>
+                    <div class="w-full h-[1px] bg-greenDark"></div>
+                    <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
+                    <div class="w-full h-[1px] bg-greenDark mb-2"></div>
+                    <div class="flex items-center justify-center gap-4">
+                        <a href="{% url 'reparacion_recepcion' id=reparacion.id%}" class="w-auto h-auto p-1 text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Ver factura <i class="fa-regular fa-file-pdf"></i></a>
+                        <a href="{% url 'reparacion_recepcion' id=reparacion.id%}" class="w-auto h-auto p-1 text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Pagar <i class="fa-solid fa-hand-holding-dollar"></i></a>
+                    </div>
+ 
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

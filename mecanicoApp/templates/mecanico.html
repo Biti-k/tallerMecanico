@@ -4,6 +4,7 @@
 {% block content %}
 <div class="flex w-full min-h-full bg-greenDarkest">
     <div class="w-full p-8 contenido">
+        <a href="{% url 'logout' %}" class="p-3 mt-1 transition rounded text-green1 bg-greenDark hover:text-clay">Cerrar sesión</a>
         <h1 class="mb-4 text-4xl text-center text-green1">Bienvenido Mecánico</h1>
         <div class="w-full h-1 bg-greenDark"></div>
         <h2 class="mt-8 text-3xl text-center text-green1">Reparaciones</h2>
@@ -16,6 +17,24 @@
                         <p class="text-center text-green1">Coche<br>{{reparacion.coche|truncatechars:8}}</p>
                         <div class="w-full h-[1px] bg-greenDark"></div>
                         <p class="text-center text-green1">Fecha<br>{{reparacion.fecha|date:"d-m-Y"}}</p>
+                        <div class="w-full h-[1px] bg-greenDark mb-2"></div>
+                        <p class="text-center text-green1">Estado<br>
+                            {% if reparacion.estado == "C" %}
+                                Cerrada
+                            {% endif %}
+                            {% if reparacion.estado == "A" %}
+                                Abierta
+                            {% endif %}
+                            {% if reparacion.estado == "R" %}
+                                Rechazada
+                            {% endif %}
+                            {% if reparacion.estado == "F" %}
+                                Facturada
+                            {% endif %}
+                            {% if reparacion.estado == "P" %}
+                                Pagada
+                            {% endif %}
+                        </p>
                         <div class="w-full h-[1px] bg-greenDark mb-2"></div>
                         <a href="{% url 'reparacion' id=reparacion.id%}" class="w-auto h-auto p-1 mx-auto text-center transition bg-transparent border border-green1 text-green1 hover:bg-greenDark">Gestionar reparacion <i class="fa-solid fa-pencil"></i></a>
                     </div>

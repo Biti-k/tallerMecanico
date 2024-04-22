@@ -4,8 +4,22 @@
 {% block content %}
 <div class="flex w-full min-h-full bg-greenDarkest">
     <div class="w-full p-8 contenido">
-
-
+        <form method="post">
+            {% csrf_token %}
+            <p class="text-[50px] text-green1">Descuento %</p>
+            <div class="inputContainer">
+                <input type="number" min="0" max="100" placeholder="
+                    {% if linea.descuento != None %}
+                        {{linea.descuento}}
+                    {% endif %}
+                " name="descuento">
+            </div>
+            
+            <div class="mt-5 inputContainer w-[250px] mx-auto">
+                <input type="submit" value="Realizar modificación" class="cursor-pointer">
+            </div>
+            
+        </form>
     </div>
 </div>
 {% endblock %}
